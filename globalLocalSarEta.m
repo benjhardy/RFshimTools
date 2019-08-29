@@ -1,4 +1,4 @@
-function [gSar_v,lSar_m,eta_v] = globalLocalSarEta(wfull_m,B1plus_m, etaE, sarE, voxelizedMesh, Indices)
+function [gSar_v,lSar_m,eta_v] = globalLocalSarEta(wfull_m,B1plus_m, etaE, sarE, voxelizedMesh, Indices, flag)
     % calculates local and global sar given the shim data
     % also calculates eta
     % Input: wfull_m - array of shims(Number of coils, some var)
@@ -6,6 +6,7 @@ function [gSar_v,lSar_m,eta_v] = globalLocalSarEta(wfull_m,B1plus_m, etaE, sarE,
     %        Edata - etaE and sarE to calculate eta and SAR
     %        voxelizedMesh - struct stuff needed to calculate eta and SAR
     %        Indices - struct containing indexMesh_x,y,z
+    %        flag - true if you want 10 gram SAR but it might take a while
     %        Output: local, global and Eta for the array
     
     % load the structs
@@ -64,17 +65,18 @@ function [gSar_v,lSar_m,eta_v] = globalLocalSarEta(wfull_m,B1plus_m, etaE, sarE,
         SAR(isnan(SAR)) = 0;
         gSar = sum(SAR);
         gSar_v(i) = gSar;
-
-        % calculate local 10 gram SAR . . .
-        fprintf('Calculating local SAR data for the %d element array Shim\n',Nc)
-        wE_m = 0*sensorFrankMask;
-        C = sigma_v./rho_v;
-        wE_m(sensorFrankMask) = C.*sarEshim;
-        wE_m(isnan(wE_m)) = 0;
-        % calls NYU n gram SAR average tool.
-        lSar = SARavesphnp(rho_m, wE_m, .001,.001,.001,10);
-        lSar_m(:,:,:,i) = lSar;
         
+        if flag == true
+            % calculate local 10 gram SAR . . .
+            fprintf('Calculating local SAR data for the %d element array Shim\n',Nc)
+            wE_m = 0*sensorFrankMask;
+            C = sigma_v./rho_v;
+            wE_m(sensorFrankMask) = C.*sarEshim;
+            wE_m(isnan(wE_m)) = 0;
+            % calls NYU n gram SAR average tool.
+            lSar = SARavesphnp(rho_m, wE_m, .001,.001,.001,10);
+            lSar_m(:,:,:,i) = lSar;
+        end
         fprintf('Calculation set %d/%d done...\n',i,numvars)
     end
 

@@ -56,17 +56,6 @@ function [wfull_m, RSD_v, maxI_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX,
         fprintf('Fourier Kernel multiplied for coil %d\n',j)
     end
     
-    % Step 4:
-    % Set initial Phase
-    if strcmp(phase,'zeroSum')
-        phs = zeros(Np,1);
-    end
-    if strcmp(phase,'phs_cp')
-        phs = zeroCenterPhase(B1plus_m);
-    end
-    if strcmp(phase, 'random')
-        phs = 2*pi*rand(Np,1) - pi; 
-    end
     
     % preallocation for speed:
     num = length(betas);
@@ -76,6 +65,18 @@ function [wfull_m, RSD_v, maxI_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX,
     
     % Loop through each beta value and perform the shim...
     for i = 1:num
+        
+        % Step 4:
+        % Set initial Phase
+        if strcmp(phase,'zeroSum')
+            phs = zeros(Np,1);
+        end
+        if strcmp(phase,'phs_cp')
+            phs = zeroCenterPhase(B1plus_m);
+        end
+        if strcmp(phase, 'random')
+            phs = 2*pi*rand(Np,1) - pi; 
+        end
         
         beta = betas(i);
         % STEP 5:

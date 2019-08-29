@@ -29,12 +29,12 @@ function [B1plus_m, FOX] = B1plusReform(B1plus_m, voxelizedMesh,Indices)
     FOX = logical(brainMask(indexMesh_z, indexMesh_y, indexMesh_x));
     
     if (flag == true)
-        
+        fprintf('Restructuring B1plus_m...\n') 
         temp = sensorfrankMask + FOX;
         temp = nonzeros(temp(:));
         brainIn = find(temp == 2);
         B1plus_m = B1plus_m(brainIn,:);
-    
+        fprintf('B1plus_m has been restructured...\n') 
     end
     
 end

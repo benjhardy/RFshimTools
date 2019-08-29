@@ -8,9 +8,20 @@ function voxelation(fullheadMesh)
 %       mesh
 %       x_mesh, y_mesh, z_mesh hold the mesh locations
        
-    
-    load('fullheadMesh')
-    load('densityValsBrain.mat', 'densityValsBrain')
+    MeshExDensity = fullheadMesh.MeshExDensity;                             
+    MeshExEpsilon_r = fullheadMesh.MeshExEpsilon_r;                           
+    MeshExSigma = fullheadMesh.MeshExSigma;                           
+    MeshEyDensity = fullheadMesh.MeshEyDensity;                          
+    MeshEyEpsilon_r = fullheadMesh.MeshEyEpsilon_r;                             
+    MeshEySigma = fullheadMesh.MeshEySigma;                     
+    MeshEzDensity = fullheadMesh.MeshEzDensity;                       
+    MeshEzEpsilon_r = fullheadMesh.MeshEzEpsilon_r;                        
+    MeshEzSigma = fullheadMesh.MeshEzSigma;                   
+    grid_X = fullheadMesh.grid_X;                
+    grid_Y = fullheadMesh.grid_Y;                       
+    grid_Z = fullheadMesh.grid_Z;
+   
+    load('C:\Users\benja\OneDrive - Vanderbilt\Documents\MATLAB\RFshimTools\densityValsBrain.mat', 'densityValsBrain')
 
 
     % Density Mesh creation...
