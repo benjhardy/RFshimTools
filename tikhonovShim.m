@@ -1,4 +1,4 @@
-function [wfull_m, RSD_v, maxI_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX, voxelizedMesh, Indices, phase, d)
+function [wfull_m, RSD_v, maxI_v, ab1ps_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX, voxelizedMesh, Indices, phase, d)
 % Tikhonov Regularization Function
 % source Code: https://vuiis.vumc.org/~grissowa/teaching.html
 % *click pulse design code
@@ -98,6 +98,8 @@ function [wfull_m, RSD_v, maxI_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX,
         RSD_v(i) = std(abs(Afull*wfull))/mean(abs(Afull*wfull));
         maxI_v(i) = abs(max(wfull));
         wfull_m(:,i) = wfull;
+        G = (1/Np)*(B1plus_m'*B1plus_m);
+        ab1ps(i) = wfull'*G*wfull;
         fprintf('Beta value %d shimmed, %d/%d shims complete.\n',beta, i, num)
     end
 
