@@ -1,10 +1,10 @@
-function eta_v = calculateEta(wfull_m, ab1ps, etaE, voxelizedMesh, Indices)
+function eta_v = calculateEta(wfull_m, ab1ps, etaE_m, voxelizedMesh, Indices)
     % 
     % Calculates ETA
     % Benjamin M Hardy 8-29-2019
     % inputs:
     %        wfull_m: shim values
-    %        B1plus_m: B1plus_m values
+    %        ab1ps: string of average B1plus_m values
     %        etaE electrical field for ETA
     %        voxelizedMesh: struct containing all the masks and conduct.
     %        Indices: the indices of the mesh that correspond to the sensor
@@ -35,7 +35,7 @@ function eta_v = calculateEta(wfull_m, ab1ps, etaE, voxelizedMesh, Indices)
         
         w = wfull_m(:,i);
         fprintf('Calculating Eta for the %d element array Shim\n',Nc)
-        phi_m = ((.001^3)*(.5*sigma_m).*etaE)'*etaE;
+        phi_m = ((.001^3)*(.5*sigma_m).*etaE_m)'*etaE_m;
         P = w'*phi_m*w;
         eta = ab1ps(i)/P;
         clear phi_m

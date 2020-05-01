@@ -35,8 +35,8 @@ function [local_SAR, global_SAR] = localGlobalSAR(wfull_m, sarE, voxelizedMesh,I
     
     % Pre-allocate
     global_SAR = zeros(numvars,1);
-    local_SAR = zeros(size(sensorFrankMask,1),size(sensorFrankMask,2),size(sensorFrankMask,3),numvars);
-
+    %local_SAR = zeros(size(sensorFrankMask,1),size(sensorFrankMask,2),size(sensorFrankMask,3),numvars);
+    local_SAR = zeros(numvars,1);
 % set the number of times to loop through and calculate
     for i = 1:numvars 
         
@@ -45,14 +45,14 @@ function [local_SAR, global_SAR] = localGlobalSAR(wfull_m, sarE, voxelizedMesh,I
         fprintf('Calculating global SAR data for the %d element array Shim\n',Nc)
         % apply the shim to all the E
         sarEshim = sarE*((abs(w).^2));
-        C = .5*(1/size(sarE,1)*.001^3)*(.001^3);
-        SAR = C*((1./rho_v).*sigma_v.*sarEshim);
+        % C = .5*(.001^3);
+        SAR = .5*(.001^3)*((1./rho_v).*sigma_v.*sarEshim);
         % finally, this means the density is 0 or undefined or air in some
         % parts of my mask, this makes sense, so at these points, the SAR value
         % is entirely ignored...
         SAR(isnan(SAR)) = 0;
         gSar = sum(SAR);
-        global_SAR(i) = gSar;
+        global_SAR(i,1) = gSar;
         
         
         if flag == true
@@ -64,7 +64,7 @@ function [local_SAR, global_SAR] = localGlobalSAR(wfull_m, sarE, voxelizedMesh,I
             wE_m(isnan(wE_m)) = 0;
             % calls NYU n gram SAR average tool.
             lSar = SARavesphnp(rho_m, wE_m, .001,.001,.001,10);
-            local_SAR(:,:,:,i) = lSar;
+            local_SAR(i) = max(lSar,[],'all');
         end
         fprintf('Calculation set %d/%d done...\n',i,numvars)
         

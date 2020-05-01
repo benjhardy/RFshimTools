@@ -21,9 +21,11 @@ function voxelation(fullheadMesh)
     grid_Y = fullheadMesh.grid_Y;                       
     grid_Z = fullheadMesh.grid_Z;
    
-    load('C:\Users\benja\OneDrive - Vanderbilt\Documents\MATLAB\RFshimTools\densityValsBrain.mat', 'densityValsBrain')
-
-
+    %load('C:\Users\benja\OneDrive - Vanderbilt\Documents\MATLAB\RFshimTools\densityValsBrain.mat', 'densityValsBrain')
+    load('F:\5634\yuruiDensityVals.mat','yuruiDensityVals')
+    
+    densityValsBrain = yuruiDensityVals;
+    
     % Density Mesh creation...
     xD = MeshExDensity;
     yD = MeshEyDensity;
@@ -49,7 +51,8 @@ function voxelation(fullheadMesh)
            end
        end
     end
-
+    
+    %rho_m(isnan(rho_m)) = 0;
     % select the density values of interest to create the brainMask
     % figure
     % imagesc(squeeze(rho_m(120,:,:)))
@@ -71,18 +74,18 @@ function voxelation(fullheadMesh)
     brainMask = imfill(brainMask,'holes');
 
     %cancel the bottom z slices
-    temp = 0*brainMask;
-    temp(176:end,:,:) = 1;
-    brainMask = brainMask.*temp;
+    %temp = 0*brainMask;
+    %temp(176:end,:,:) = 1;
+    %brainMask = brainMask.*temp;
 
-    %zMovie(brainMask,150)
+    zMovie(brainMask,250)
 
     %
     % frankMask is anything but freespace minus the shield?
     frankMask = ~isnan(rho_m);
     frankMask = imfill(frankMask,'holes');
 
-    %zMovie(frankMask,100);
+    zMovie(frankMask,250);
 
 
     % Sigma and Epsilon...
@@ -123,11 +126,11 @@ function voxelation(fullheadMesh)
     end
     %
     epsilonr_m = frankMask.*epsilonr_m;
-    %zMovie(epsilonr_m,100)
+    zMovie(epsilonr_m,250)
     
     %
     sigma_m = sigma_m.*frankMask;
-    %zMovie(sigma_m,100)
+    zMovie(sigma_m,250)
     
     % Recreate the Grid...
     % 

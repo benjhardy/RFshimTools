@@ -1,21 +1,16 @@
-function [wfull_m, RSD_v, maxI_v, ab1ps_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX, voxelizedMesh, Indices, phase, d)
+function [wfull_m, RSD_v, maxI_v, ab1ps_v] = tikhonovShim(B1plus_m, betas, stopWhen, FOX, phase, d)
 % Tikhonov Regularization Function
 % source Code: https://vuiis.vumc.org/~grissowa/teaching.html
 % *click pulse design code
 % OUTPUT : [wfull_m, RSD_v, maxI_v]
 % Input: B1plus_m - the array of Coils B1plus complex field values
-%        Indices - the points in the field that the field has been
-%        measured, or the points in the mesh that the sensor box measured
-%        the B and E field
+%        
 %        beta -  a string of beta values to shim the array over
 %        stopWhen - a value that specifies when to stop the iterative phase
 %        optimization, when the abs. difference between the previous cost
 %        function and present cost function hasn't changed
 %        FOX - the field of Excitation, matrix where the Bfield corresponds
 %        in  a linearized fashion
-%        voxelizedMesh - Struct containing the mesh points (may need to
-%        change later)
-%        Indices - the points within the mesh where the sensor is located
 %        phase - a string specifying what the initial phase should be...
 %        choices 'random', 'zeroSum', 'phs_cp'
 %        d - target field strength in uT
@@ -53,14 +48,15 @@ function [wfull_m, RSD_v, maxI_v, ab1ps_v] = tikhonovShim(B1plus_m, betas, stopW
     for j = 1:Nc
         % multiply b1maps and fourier kernel
         Afull(:,j) = bsxfun(@times,B1plus_m(:,j),A);
-        fprintf('Fourier Kernel multiplied for coil %d\n',j)
+        
     end
-    
+    fprintf('Fourier Kernel multiplied for coils 1:%d\n',Nc)
     
     % preallocation for speed:
     num = length(betas);
     RSD_v = zeros(num,1);
     maxI_v = zeros(num,1);
+    ab1ps_v = zeros(num,1);
     wfull_m = zeros(Nc,num);
     
     % Loop through each beta value and perform the shim...
@@ -99,7 +95,7 @@ function [wfull_m, RSD_v, maxI_v, ab1ps_v] = tikhonovShim(B1plus_m, betas, stopW
         maxI_v(i) = abs(max(wfull));
         wfull_m(:,i) = wfull;
         G = (1/Np)*(B1plus_m'*B1plus_m);
-        ab1ps(i) = wfull'*G*wfull;
+        ab1ps_v(i) = wfull'*G*wfull;
         fprintf('Beta value %d shimmed, %d/%d shims complete.\n',beta, i, num)
     end
 
